@@ -2,6 +2,27 @@
 
 A production-ready MERN stack application for course subscriptions with JWT authentication, promo codes, and a modern Black Friday themed UI.
 
+**Live Demo:** [Add your Vercel URL here]  
+**GitHub:** [Add your GitHub repo URL here]
+
+---
+
+## Screenshots
+
+### Login Page
+![Login](screenshots/login.png)
+
+### Courses List
+![Courses List](screenshots/courses-list.png)
+
+### Course Detail
+![Course Detail](screenshots/course-detail.png)
+
+### My Courses
+![My Courses](screenshots/my-courses.png)
+
+---
+
 ## Tech Stack
 
 | Layer      | Technologies                          |
@@ -28,106 +49,146 @@ A production-ready MERN stack application for course subscriptions with JWT auth
 | test2@gmail.com  | password123 |
 | admin@gmail.com  | admin123    |
 
-## Local Setup
+---
+
+## Local Development Setup
 
 ### Prerequisites
 
-- Node.js 18+
-- MongoDB (local or Atlas)
+- **Node.js** 18 or later
+- **MongoDB** (local installation or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) free cluster)
 
-### 1. Clone & Install
+### Step 1: Clone the Repository
 
 ```bash
+git clone https://github.com/YOUR_USERNAME/mini-course-subscription-app.git
 cd mini-course-subscription-app
-npm run install:all
 ```
 
-### 2. Environment Variables
+### Step 2: Install Dependencies
 
-**Backend** (`backend/.env`):
+```bash
+# Install root dependencies
+npm install
+
+# Install backend dependencies
+cd backend && npm install
+
+# Install frontend dependencies
+cd ../frontend && npm install
+```
+
+### Step 3: Environment Variables
+
+**Backend** – Create `backend/.env`:
 
 ```env
 MONGODB_URI=mongodb://localhost:27017/mini-course-subscription
+# Or use MongoDB Atlas: mongodb+srv://user:password@cluster.mongodb.net/mini-course-subscription?retryWrites=true&w=majority
+
 JWT_SECRET=your-super-secret-jwt-key-change-in-production
 PORT=5000
 CORS_ORIGIN=http://localhost:5173
 ```
 
-**Frontend** (`frontend/.env`):
+**Frontend** – Create `frontend/.env`:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-### 3. Seed Database
+### Step 4: Seed the Database
 
 ```bash
-npm run seed
+cd backend
+node scripts/seed.js
 ```
 
 This creates 3 dummy users and 5 mock courses.
 
-### 4. Run Development
+### Step 5: Run the Application
 
+**Terminal 1 – Backend:**
 ```bash
-# Run both frontend and backend
+cd backend
 npm run dev
 ```
 
-Or run separately:
-
+**Terminal 2 – Frontend:**
 ```bash
-# Terminal 1 - Backend
-cd backend && npm run dev
-
-# Terminal 2 - Frontend
-cd frontend && npm run dev
+cd frontend
+npm run dev
 ```
 
-- Frontend: http://localhost:5173  
-- Backend: http://localhost:5000  
+- **Frontend:** http://localhost:5173  
+- **Backend:** http://localhost:5000  
 
-## API Endpoints
+### Step 6: Test the App
 
-### Auth
-- `POST /api/auth/signup` - Register (optional)
-- `POST /api/auth/login` - Login, returns JWT
+1. Open http://localhost:5173
+2. Log in with `test1@gmail.com` / `password123`
+3. Browse courses, subscribe (use `BFSALE25` for paid courses), and check My Courses
 
-### Courses
-- `GET /api/courses` - List all courses
-- `GET /api/courses/:id` - Get course by ID
-
-### Subscription
-- `POST /api/subscribe` - Subscribe (requires JWT, body: `{ courseId, promoCode? }`)
-- `GET /api/subscribe/my-courses` - User's subscriptions (requires JWT)
-- `GET /api/subscribe/check/:courseId` - Check if subscribed (requires JWT)
+---
 
 ## Deployment
 
 ### Backend (Render)
 
-1. Create a new **Web Service** on [Render](https://render.com)
-2. Connect your repo, set root directory to `backend`
-3. Build command: `npm install`
-4. Start command: `npm start`
-5. Add environment variables:
-   - `MONGODB_URI` - MongoDB Atlas connection string
-   - `JWT_SECRET` - Strong random string
-   - `CORS_ORIGIN` - Your frontend URL (e.g. `https://your-app.vercel.app`)
+1. Go to [Render](https://render.com) and sign in
+2. Click **New** → **Web Service**
+3. Connect your GitHub repository
+4. Configure:
+   - **Root Directory:** `backend`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Instance Type:** Free
+5. Add **Environment Variables:**
+   - `MONGODB_URI` – MongoDB Atlas connection string
+   - `JWT_SECRET` – Strong random string (e.g. `openssl rand -hex 32`)
+   - `CORS_ORIGIN` – Your Vercel frontend URL (e.g. `https://your-app.vercel.app`)
+6. Click **Create Web Service**
+7. Copy the backend URL (e.g. `https://mini-course-xxx.onrender.com`)
 
 ### Frontend (Vercel)
 
-1. Create a new project on [Vercel](https://vercel.com)
-2. Set root directory to `frontend`
-3. Build command: `npm run build`
-4. Output directory: `dist`
-5. Add environment variable:
-   - `VITE_API_URL` - Your Render backend URL (e.g. `https://your-backend.onrender.com/api`)
+1. Go to [Vercel](https://vercel.com) and sign in
+2. Click **Add New** → **Project**
+3. Import your GitHub repository
+4. Configure:
+   - **Root Directory:** `frontend` (click Edit)
+   - **Framework Preset:** Vite
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+5. Add **Environment Variable:**
+   - `VITE_API_URL` – Your Render backend URL + `/api` (e.g. `https://mini-course-xxx.onrender.com/api`)
+6. Click **Deploy**
+7. Copy your Vercel URL
 
-### Post-Deploy
+### Post-Deployment
 
-1. Update `CORS_ORIGIN` in Render to your Vercel URL
-2. Run seed script against production MongoDB (or use Atlas UI to add data)
+1. In Render, update `CORS_ORIGIN` to your exact Vercel URL
+2. Run the seed script against your production MongoDB (Atlas) to add users and courses:
+   ```bash
+   cd backend
+   # Set MONGODB_URI in .env to your Atlas URI, then:
+   node scripts/seed.js
+   ```
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Register (optional) |
+| POST | `/api/auth/login` | Login, returns JWT |
+| GET | `/api/courses` | List all courses |
+| GET | `/api/courses/:id` | Get course by ID |
+| POST | `/api/subscribe` | Subscribe (requires JWT) |
+| GET | `/api/subscribe/my-courses` | User's subscriptions (requires JWT) |
+
+---
 
 ## Folder Structure
 
@@ -150,9 +211,12 @@ mini-course-subscription-app/
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   └── index.html
+├── screenshots/
 ├── package.json
 └── README.md
 ```
+
+---
 
 ## License
 
