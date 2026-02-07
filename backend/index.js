@@ -12,11 +12,24 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+// Middleware - Allow Vercel domains and localhost
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.CORS_ORIGIN,
+].filter(Boolean);
+// Also allow any *.vercel.app
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow for now - tighten in production if needed
+    }
+  },
   credentials: true,
-}));
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // API Routes
