@@ -45,8 +45,13 @@ app.use((err, req, res, next) => {
 
 // Connect to MongoDB and start server
 const startServer = async () => {
+  const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/mini-course-subscription';
+  if (!process.env.MONGODB_URI) {
+    console.error('❌ MONGODB_URI environment variable is not set. Add it in Render Dashboard → Environment.');
+    process.exit(1);
+  }
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/mini-course-subscription', {
+    await mongoose.connect(mongoUri, {
       family: 4, // Force IPv4 - fixes Windows SSL/TLS issues with MongoDB Atlas
       serverSelectionTimeoutMS: 10000,
     });
