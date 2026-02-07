@@ -1,0 +1,16 @@
+{
+  "name": "mini-course-subscription-app",
+  "version": "1.0.0",
+  "description": "Mini Course Subscription App - Black Friday Edition",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "seed": "cd backend && node scripts/seed.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

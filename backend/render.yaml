@@ -1,0 +1,17 @@
+# Render Blueprint - Optional
+# Use this for Render deployment or configure manually in dashboard
+services:
+  - type: web
+    name: mini-course-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
